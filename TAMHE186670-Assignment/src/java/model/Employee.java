@@ -11,8 +11,10 @@ import java.util.ArrayList;
  * @author sonnt-local
  */
 public class Employee {
+
     private int id;
     private String name;
+    private String email;
     private Employee manager;
     private Department dept;
     private ArrayList<Employee> staffs = new ArrayList<>();
@@ -24,6 +26,14 @@ public class Employee {
 
     public void setDirectstaffs(ArrayList<Employee> directstaffs) {
         this.directstaffs = directstaffs;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getId() {
@@ -65,5 +75,5 @@ public class Employee {
     public void setStaffs(ArrayList<Employee> staffs) {
         this.staffs = staffs;
     }
-    
+
 }
