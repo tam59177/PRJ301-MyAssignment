@@ -22,14 +22,14 @@ public abstract class BaseRequiredAuthenticationController extends HttpServlet {
     private User getLoggedUser(HttpServletRequest req) {
         return (User) req.getSession().getAttribute("user");
     }
-    
-    private boolean isAllowedAccess(User u, HttpServletRequest req)
-    {
+
+    private boolean isAllowedAccess(User u, HttpServletRequest req) {
         String current_endpoint = req.getServletPath();
         for (Role role : u.getRoles()) {
             for (Feature feature : role.getFeatures()) {
-                if(feature.getUrl().equals(current_endpoint))
+                if (feature.getUrl().equals(current_endpoint)) {
                     return true;
+                }
             }
         }
         return false;
@@ -42,7 +42,8 @@ public abstract class BaseRequiredAuthenticationController extends HttpServlet {
             //do business
             doPost(req, resp, u);
         } else {
-            resp.getWriter().println("access denied!");
+            req.setAttribute("message", "Access Denied!");
+            req.getRequestDispatcher("view/authentication/login.jsp").forward(req, resp);
         }
     }
 
@@ -57,8 +58,9 @@ public abstract class BaseRequiredAuthenticationController extends HttpServlet {
             //do business
             doGet(req, resp, u);
         } else {
-            resp.getWriter().println("access denied!");
+            req.setAttribute("message", "Access Denied!");
+            req.getRequestDispatcher("view/authentication/login.jsp").forward(req, resp);
         }
     }
-
+    
 }
