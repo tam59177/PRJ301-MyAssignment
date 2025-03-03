@@ -38,6 +38,11 @@
                 height: auto;
                 box-shadow: 0 0 10px 0 #ccc;
             }
+
+            .alert p {
+                padding: 0;
+                margin: 0;
+            }
         </style>
     </head>
     <body class="text-center">
