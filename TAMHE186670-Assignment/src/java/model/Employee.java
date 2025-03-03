@@ -76,4 +76,9 @@ public class Employee {
         this.staffs = staffs;
     }
 
+    @Override
+    public String toString() {
+        return "Employee{" + "id=" + id + ", name=" + name + ", email=" + email + ", manager=" + manager + ", dept=" + dept + ", staffs=" + staffs + ", directstaffs=" + directstaffs + '}';
+    }
+
 }

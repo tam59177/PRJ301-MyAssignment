@@ -38,5 +38,10 @@ public class Feature {
     public void setRoles(ArrayList<Role> roles) {
         this.roles = roles;
     }
+
+    @Override
+    public String toString() {
+        return "Feature{" + "id=" + id + ", url=" + url + ", roles=" + roles + '}';
+    }
     
 }

@@ -60,5 +60,10 @@ public class User {
     public void setDisplayname(String displayname) {
         this.displayname = displayname;
     }
+
+    @Override
+    public String toString() {
+        return "User{" + "username=" + username + ", password=" + password + ", displayname=" + displayname + ", employee=" + employee + ", roles=" + roles + '}';
+    }
     
 }
