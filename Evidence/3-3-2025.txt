@@ -1,0 +1,99 @@
+Google: Bootstrap Template
+
+Chat GPT: where to find login template
+
+Google: crm logo
+
+Claude AI: Cách đổ bóng cho div
+
+Chat GPT: Cách tích hợp thư viện để gửi mail khi code web java
+
+ChatGPT: how about welcome file is a controller
+
+ChatGPT: i want to direct add a controller to become a welcome file - Solution: change login controller parttern to "/"
+
+ChatGPT: i want to gert image from img folder, can i access it by */img/logo.png
+
+ChatGPT: What is ${pageContext.request.contextPath}
+
+ChatGPT: how to check if cookie have params
+
+ChatGPT: how to format sql code in sql server managerment - Solution: Install add-in -> no no no
+
+ChatGPT: @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Cookie[] cookies = request.getCookies(); // Get all cookies
+        HttpSession session = request.getSession(true);
+        UserDAO udb = new UserDAO();
+        EmployeeDAO edb = new EmployeeDAO();
+        
+        String username = "";
+        String password = "";
+        String rememberMe = "";
+        
+        User loginer = null;
+        Employee loginE = null;
+
+        //Nếu như user chọn remember me thì sẽ có cookie -> check cookie
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("username".equals(cookie.getName())) {
+                    username = cookie.getValue();
+                }
+                
+                if ("password".equals(cookie.getName())) {
+                    password = cookie.getValue();
+                }
+                
+                if ("rememberMe".equals(cookie.getName())) {
+                    rememberMe = cookie.getValue();
+                }
+            }
+            
+            loginer = udb.login(username, password);
+            loginE = edb.get(loginer.getEmployee().geteId());
+            loginer.setEmployee(loginE);
+            
+            session.setAttribute("user", loginer);
+            response.sendRedirect("home");
+        } else {
+            username = request.getParameter("username");
+            password = request.getParameter("password");
+            rememberMe = request.getParameter("remember");
+            
+            loginer = udb.login(username, password);
+            
+            if (loginer != null) {
+                loginE = edb.get(loginer.getEmployee().geteId());
+                loginer.setEmployee(loginE);
+                
+                if(rememberMe.equalsIgnoreCase("on")){
+                    
+                } else {
+                    
+                }
+            } else {
+                response.getWriter().print("Access Denied!");
+            }
+        }
+    }
+
+this is my doGet right now, i do not know how to set cookie
+
+Google: CRM template
+
+ClaudeAI: i need a layout like a normal CRM page, like header, navbar sidebar or something ... -> Homepage
+
+ChatGPT: <c:forEach items="${sessionScope.user.roles}" var="r">
+                <c:forEach items="${r.features}" var="f">
+                    <div class="nav-item active">📊 <a href="${f.urlEndpoint}">${f.menu}</a></div>
+                    </c:forEach>
+                </c:forEach>
+
+this may duplicate cause roles can have same feature, i do not know how to fix
+
+ChatGPT: give me fn prefix
+
+ChatGPT: how to create a message box using bootstrap
+
