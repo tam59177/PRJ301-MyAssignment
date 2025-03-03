@@ -63,8 +63,8 @@ public class LoginController extends HttpServlet {
             }
 
             HttpSession session = req.getSession();
-
             session.setAttribute("user", user);
+            resp.sendRedirect("home");
         } else {
             req.setAttribute("message", "Access Denied!");
             req.getRequestDispatcher("view/authentication/login.jsp").forward(req, resp);
@@ -101,6 +101,7 @@ public class LoginController extends HttpServlet {
                 user.setEmployee(profile);
                 HttpSession session = req.getSession();
                 session.setAttribute("user", user);
+                resp.sendRedirect("home");
                 return;
             }
         }
