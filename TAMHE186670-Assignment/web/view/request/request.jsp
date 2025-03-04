@@ -106,12 +106,12 @@
                 color: #333;
             }
 
-            .welcome-container {
+            .welcome-container, .request-container {
                 background-color: white;
                 border-radius: 8px;
                 padding: 20px;
                 box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-                text-align: center;
+                text-align: left;
                 margin-bottom: 10px;
             }
 
@@ -152,8 +152,29 @@
                 </div>
             </div>
 
-            <div class="welcome-container">
-                
+            <div class="request-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Created By</th>
+                            <th>Status</th>
+                            <th>Processed By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tâm xin nghỉ học</td>
+                            <td>20-2-2020</td>
+                            <td>24-2-2020</td>
+                            <td>tam</td>
+                            <td>Inprogress</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </main>
 

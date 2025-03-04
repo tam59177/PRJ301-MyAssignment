@@ -135,7 +135,7 @@
         <aside class="sidebar">
             <aside class="sidebar">
                 <a href="${pageContext.request.contextPath}/home"><div class="nav-item active">📊 Home</div></a>
-                <div class="nav-item">📅 Request</div>
+                <a href="${pageContext.request.contextPath}/leaverequest"><div class="nav-item">📅 Request</div></a>
             </aside>
         </aside>
 
@@ -150,7 +150,7 @@
                 <h2>Welcome to Tam PRJ Assignment</h2>
             </div>
         </main>
-        
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

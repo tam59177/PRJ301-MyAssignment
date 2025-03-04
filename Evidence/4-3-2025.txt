@@ -3,3 +3,29 @@ ChatGPT: How to create a button using Bootstrap 5
 ChatGPT: Change text color and weight using Bootstrap
 
 ChatGPT: Why when im invalidated and remove cookie in logout controller, it not remove?
+
+ChatGPT: why it wrong near VALUES ?
+String sql = "INSERT INTO [LeaveRequests]\n"
+                    + "           ([title]\n"
+                    + "           ,[reason]\n"
+                    + "           ,[from]\n"
+                    + "           ,[to]\n"
+                    + "           ,[status]\n"
+                    + "           ,[createby]\n"
+                    + "           ,[createddate]\n"
+                    + "           ,[owner_eid]\n"
+                    + "     VALUES\n"
+                    + "           (\n"
+                    + "           ?\n"
+                    + "           ,?\n"
+                    + "           ,?\n"
+                    + "           ,?\n"
+                    + "           ,?\n"
+                    + "           ,?\n"
+                    + "           ,GETDATE()\n"
+                    + "           ,?)";
+
+ChatGPT: Why it wrong ? Date from = new Date(2025, 3, 4);
+        Date to = new Date(2025, 3, 6);
+
+ChatGPT: how to create a table by bootstrap
