@@ -14,7 +14,7 @@ public class LeaveRequest extends BaseModel {
     private String reason;
     private Date from;
     private Date to;
-    private int status;
+    private String status;
     private Employee owner;
     private User processedby;
 
@@ -50,11 +50,11 @@ public class LeaveRequest extends BaseModel {
         this.to = to;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
