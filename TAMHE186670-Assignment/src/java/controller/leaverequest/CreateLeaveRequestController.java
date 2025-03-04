@@ -26,7 +26,7 @@ public class CreateLeaveRequestController extends BaseRequiredAuthenticationCont
         lr.setTo(Date.valueOf(req.getParameter("to")));
         lr.setCreatedby(user);
         Employee owner = new Employee();
-        owner.setId(Integer.parseInt(req.getParameter("eid")));
+        owner.setId(user.getEmployee().getId());
         lr.setOwner(owner);
         
         LeaveRequestDBContext db = new LeaveRequestDBContext();

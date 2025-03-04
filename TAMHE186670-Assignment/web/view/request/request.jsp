@@ -145,6 +145,12 @@
                 <h1 class="page-title">Request</h1>
             </div>
 
+            <c:if test="${not empty message}">
+                <div class="alert alert-danger" role="alert">
+                    <p>${message}</p>
+                </div>
+            </c:if>
+
             <!-- Recent Contacts Table -->
             <div class="welcome-container">
                 <div class="btn btn-primary">

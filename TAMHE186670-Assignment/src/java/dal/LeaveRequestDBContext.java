@@ -95,7 +95,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                     + "           ,?\n"
                     + "           ,?\n"
                     + "           ,?\n"
-                    + "           ,?\n"
+                    + "           ,'Inprogress'\n"
                     + "           ,?\n"
                     + "           ,GETDATE()\n"
                     + "           ,?)";
@@ -104,9 +104,8 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
             stm.setString(2, model.getReason());
             stm.setDate(3, model.getFrom());
             stm.setDate(4, model.getTo());
-            stm.setString(5, model.getStatus());
-            stm.setString(6, model.getCreatedby().getUsername());
-            stm.setInt(7, model.getOwner().getId());
+            stm.setString(5, model.getCreatedby().getUsername());
+            stm.setInt(6, model.getOwner().getId());
             stm.executeUpdate();
 
             //get request id

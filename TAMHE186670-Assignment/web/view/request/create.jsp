@@ -150,7 +150,7 @@
             </div>
 
             <div class="request-container">
-                <form action="leaverequest/create" method="POST">
+                <form action="${pageContext.request.contextPath}/leaverequest/create" method="POST">
 
                     <!-- Title -->
                     <div class="mb-3">
