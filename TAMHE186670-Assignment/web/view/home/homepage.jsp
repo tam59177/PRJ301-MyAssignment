@@ -6,6 +6,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>CRM Home</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
             a{
                 text-decoration: none;
@@ -126,7 +127,7 @@
             <a href="${pageContext.request.contextPath}/home"><div class="logo">CRM System</div></a>
             <div class="header-right">
                 <div class="display-name">Hello, ${sessionScope.user.displayname}</div>
-                <div class="logout"><a href="${pageContext.request.contextPath}/logout">Log Out</a></div>
+                <div class="logout btn btn-primary"><a href="${pageContext.request.contextPath}/logout" class="text-light">Log Out</a></div>
             </div>
         </header>
 
@@ -149,5 +150,7 @@
                 <h2>Welcome to Tam PRJ Assignment</h2>
             </div>
         </main>
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
