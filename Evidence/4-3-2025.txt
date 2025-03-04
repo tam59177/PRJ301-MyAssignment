@@ -29,3 +29,5 @@ ChatGPT: Why it wrong ? Date from = new Date(2025, 3, 4);
         Date to = new Date(2025, 3, 6);
 
 ChatGPT: how to create a table by bootstrap
+
+ChatGPT: can you make a example of bootstrap form for me please

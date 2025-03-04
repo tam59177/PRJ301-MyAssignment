@@ -16,7 +16,7 @@ import model.LeaveRequest;
 import model.User;
 
 public class CreateLeaveRequestController extends BaseRequiredAuthenticationController {
-
+    
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
         LeaveRequest lr = new LeaveRequest();
@@ -28,15 +28,15 @@ public class CreateLeaveRequestController extends BaseRequiredAuthenticationCont
         Employee owner = new Employee();
         owner.setId(Integer.parseInt(req.getParameter("eid")));
         lr.setOwner(owner);
-
+        
         LeaveRequestDBContext db = new LeaveRequestDBContext();
         db.insert(lr);
-
+        
         req.setAttribute("message", "Submit Leave Request Success!");
     }
-
+    
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-
+        resp.sendRedirect("../view/request/create.jsp");
     }
 }

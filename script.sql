@@ -79,3 +79,5 @@ INSERT INTO Features(url) VALUES ('/home')
 INSERT INTO RoleFeature(rid, fid) VALUES (1, 1), (2, 1), (3, 1), (4, 1)
 
 INSERT INTO UserRole(rid, username) VALUES (1, 'tam')
+
+INSERT INTO Features(url) VALUES ('/leaverequest'), ('/leaverequest/create')
