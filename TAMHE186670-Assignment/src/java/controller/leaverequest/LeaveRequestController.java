@@ -31,7 +31,8 @@ public class LeaveRequestController extends BaseRequiredAuthenticationController
         int pageindex = Integer.parseInt(raw_pageindex);
 
         LeaveRequestDBContext db = new LeaveRequestDBContext();
-        ArrayList<LeaveRequest> lrList = db.list(pageindex, pagesize);
+
+        ArrayList<LeaveRequest> lrList = db.list(pageindex, pagesize, user.getEmployee().getId());
         db = new LeaveRequestDBContext();
         int count = db.count();
         int totalpage = (count % pagesize == 0) ? (count / pagesize) : (count / pagesize) + 1;

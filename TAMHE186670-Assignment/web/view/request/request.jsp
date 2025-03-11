@@ -161,33 +161,40 @@
             </div>
 
             <div class="request-container">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Created By</th>
-                            <th>Status</th>
-                            <th>Processed By</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${lrList}" var="l">
-                            <tr>
-                                <td>${l.id}</td>
-                                <td>${l.title}</td>
-                                <td>${l.from}</td>
-                                <td>${l.to}</td>
-                                <td>${l.createdby.username}</td>
-                                <td>${l.status}</td>
-                                <td>${l.processedby.username}</td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-                <div id="botpagger" class="pagger"></div>
+                <c:choose>
+                    <c:when test="${not empty lrList}">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Created By</th>
+                                    <th>Status</th>
+                                    <th>Processed By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach items="${lrList}" var="l">
+                                    <tr>
+                                        <td>${l.id}</td>
+                                        <td>${l.title}</td>
+                                        <td>${l.from}</td>
+                                        <td>${l.to}</td>
+                                        <td>${l.createdby.username}</td>
+                                        <td>${l.status}</td>
+                                        <td>${l.processedby.username}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                        <div id="botpagger" class="pagger"></div>
+                    </c:when>
+                    <c:otherwise>
+                        <p calss="text-center">No Leave Request Yet! Good Jobs</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </main>
 

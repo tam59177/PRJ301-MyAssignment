@@ -1,1 +1,3 @@
 Copy từ project của thầy
+
+ChatGPT: Tôi có một điều kiện ở trong 1 trang jsp là: khi danh sách rỗng thì sẽ không hiển thị table, khi danh sách không rỗng thì hiển thị ra table -> choose when otherwise

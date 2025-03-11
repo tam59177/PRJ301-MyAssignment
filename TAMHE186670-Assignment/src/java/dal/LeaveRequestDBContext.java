@@ -35,7 +35,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
 
     }
     
-    public ArrayList<LeaveRequest> list(int pageindex, int pagesize) {
+    public ArrayList<LeaveRequest> list(int pageindex, int pagesize, int ownerEid) {
         ArrayList lrList = new ArrayList();
         try {
             String sql = "SELECT lr.[lrid]\n"
@@ -56,13 +56,15 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                     + "	INNER JOIN Employees e ON e.eid = lr.owner_eid\n"
                     + "	INNER JOIN Departments d ON d.did = e.did\n"
                     + "	LEFT JOIN Users p ON p.username = lr.processedby\n"
+                    + "	WHERE lr.owner_eid = ?\n"
                     + " ORDER BY lrid DESC \n"
                     + "OFFSET (?-1)*? ROWS\n"
                     + "FETCH NEXT ? ROWS ONLY;";
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1, pageindex);
-            stm.setInt(2, pagesize);
+            stm.setInt(1, ownerEid);
+            stm.setInt(2, pageindex);
             stm.setInt(3, pagesize);
+            stm.setInt(4, pagesize);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 LeaveRequest lr = new LeaveRequest();
@@ -295,7 +297,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
 //
 //        dao.insert(model);
 
-        System.out.println(dao.list(1, 1));
+//        System.out.println(dao.list(1, 1));
     }
 
 }
