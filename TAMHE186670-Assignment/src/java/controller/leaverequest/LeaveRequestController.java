@@ -25,20 +25,21 @@ public class LeaveRequestController extends BaseRequiredAuthenticationController
     protected void doGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
         int pagesize = 10;
         String raw_pageindex = req.getParameter("page");
-        if(raw_pageindex ==null || raw_pageindex.length()==0)
+        if (raw_pageindex == null || raw_pageindex.length() == 0) {
             raw_pageindex = "1";
+        }
         int pageindex = Integer.parseInt(raw_pageindex);
-        
+
         LeaveRequestDBContext db = new LeaveRequestDBContext();
-        ArrayList<LeaveRequest> lrList = db.list(pageindex,pagesize);
+        ArrayList<LeaveRequest> lrList = db.list(pageindex, pagesize);
         db = new LeaveRequestDBContext();
         int count = db.count();
-        int totalpage = (count % pagesize ==0)?(count/pagesize):(count/pagesize)+1;
-        
-        request.setAttribute("totalpage", totalpage);
-        request.setAttribute("pageindex", pageindex);
-        request.setAttribute("dummies", dummies);
-        request.getRequestDispatcher("../view/dummy/list.jsp").forward(request, response);
+        int totalpage = (count % pagesize == 0) ? (count / pagesize) : (count / pagesize) + 1;
+
+        req.setAttribute("totalpage", totalpage);
+        req.setAttribute("pageindex", pageindex);
+        req.setAttribute("lrList", lrList);
+        req.getRequestDispatcher("../view/request/request.jsp").forward(req, resp);
     }
 
 }

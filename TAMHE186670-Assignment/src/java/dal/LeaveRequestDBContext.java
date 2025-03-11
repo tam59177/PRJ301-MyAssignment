@@ -7,14 +7,34 @@ package dal;
 import java.util.ArrayList;
 import model.LeaveRequest;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Employee;
 import model.User;
 
 public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
 
+    public int count() {
+        try {
+            String sql = "SELECT COUNT(*) FROM LeaveRequests";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+               return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (connection != null)
+                try {
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return -1;
+
+    }
+    
     public ArrayList<LeaveRequest> list(int pageindex, int pagesize) {
         ArrayList lrList = new ArrayList();
         try {
