@@ -8,7 +8,7 @@ function pagger(id,pageindex,totalpage,gap)
     var content = '';
     
     if(pageindex>gap + 1)
-            content += '<a href="list?page=1">First</a>';
+            content += '<a href="leaverequest?page=1">First</a>';
     
     if(pageindex-gap>2)
             content += '<span>...</span>';
@@ -16,22 +16,22 @@ function pagger(id,pageindex,totalpage,gap)
     for (var i=pageindex-gap;i<pageindex;i++)
     {
         if(i>0)
-            content += '<a href="list?page='+i+'">'+i+'</a>';
+            content += '<a href="leaverequest?page='+i+'">'+i+'</a>';
     }
     
-    content += '<span>'+pageindex+'</span>';
+    content += '<span class=\"span-pagger\">'+pageindex+'</span>';
     
     for (var i=pageindex+1;i<=pageindex+gap;i++)
     {
         if(i<=totalpage)
-            content += '<a href="list?page='+i+'">'+i+'</a>';
+            content += '<a href="leaverequest?page='+i+'">'+i+'</a>';
     }
     
     if(pageindex+gap<=totalpage - 2)
             content += '<span>...</span>';
         
     if(pageindex<totalpage - gap)
-            content += '<a href="list?page='+totalpage+'">Last</a>';
+            content += '<a href="leaverequest?page='+totalpage+'">Last</a>';
     
     container.innerHTML = content;
     

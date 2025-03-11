@@ -6,6 +6,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Request</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="js/control/pagger.js" type="text/javascript"></script>
+        <link href="css/control/pagger.css" rel="stylesheet" type="text/css"/>
         <style>
             a{
                 text-decoration: none;
@@ -162,6 +164,7 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Title</th>
                             <th>From</th>
                             <th>To</th>
@@ -171,19 +174,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Tâm xin nghỉ học</td>
-                            <td>20-2-2020</td>
-                            <td>24-2-2020</td>
-                            <td>tam</td>
-                            <td>Inprogress</td>
-                            <td></td>
-                        </tr>
+                        <c:forEach items="${lrList}" var="l">
+                            <tr>
+                                <td>${l.id}</td>
+                                <td>${l.title}</td>
+                                <td>${l.from}</td>
+                                <td>${l.to}</td>
+                                <td>${l.createdby.username}</td>
+                                <td>${l.status}</td>
+                                <td>${l.processedby.username}</td>
+                            </tr>
+                        </c:forEach>
                     </tbody>
                 </table>
+                <div id="botpagger" class="pagger"></div>
             </div>
         </main>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            pagger('botpagger',${requestScope.pageindex},${requestScope.totalpage}, 2);
+        </script>
     </body>
 </html>

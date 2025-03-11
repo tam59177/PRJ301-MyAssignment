@@ -39,7 +39,7 @@ public class LeaveRequestController extends BaseRequiredAuthenticationController
         req.setAttribute("totalpage", totalpage);
         req.setAttribute("pageindex", pageindex);
         req.setAttribute("lrList", lrList);
-        req.getRequestDispatcher("../view/request/request.jsp").forward(req, resp);
+        req.getRequestDispatcher("view/request/request.jsp").forward(req, resp);
     }
 
 }
