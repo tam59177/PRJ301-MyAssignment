@@ -7,11 +7,58 @@ package dal;
 import java.util.ArrayList;
 import model.LeaveRequest;
 import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
 
 public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
+
+    public List<Integer> getListEidManage(int managerEid) {
+        List<Integer> eidList = new LinkedList<>();
+        try {
+            String sql = "WITH EmployeeHierarchy AS (\n"
+                    + "    -- Trường hợp cơ sở: Lấy quản lý chính\n"
+                    + "    SELECT eid, ename, email, managerid, did\n"
+                    + "    FROM Employees\n"
+                    + "    WHERE eid = ?\n"
+                    + "    \n"
+                    + "    UNION ALL\n"
+                    + "    \n"
+                    + "    -- Tìm tất cả nhân viên cấp dưới của những nhân viên đã chọn\n"
+                    + "    SELECT e.eid, e.ename, e.email, e.managerid, e.did\n"
+                    + "    FROM Employees e\n"
+                    + "    INNER JOIN EmployeeHierarchy eh ON e.managerid = eh.eid\n"
+                    + ")\n"
+                    + "\n"
+                    + "-- Lấy tất cả nhân viên cấp dưới, loại trừ quản lý gốc\n"
+                    + "SELECT eid\n"
+                    + "FROM EmployeeHierarchy\n"
+                    + "ORDER BY eid;";
+
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, managerEid);
+
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                eidList.add(rs.getInt("eid"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (connection != null)
+                try {
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return eidList;
+    }
 
     public int count() {
         try {
@@ -19,7 +66,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-               return rs.getInt(1);
+                return rs.getInt(1);
             }
         } catch (SQLException ex) {
             Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
@@ -34,37 +81,56 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
         return -1;
 
     }
-    
-    public ArrayList<LeaveRequest> list(int pageindex, int pagesize, int ownerEid) {
-        ArrayList lrList = new ArrayList();
+
+    public ArrayList<LeaveRequest> list(int pageindex, int pagesize, List<Integer> eids) {
+        ArrayList<LeaveRequest> lrList = new ArrayList<>();
+
         try {
-            String sql = "SELECT lr.[lrid]\n"
-                    + "      ,lr.[title]\n"
-                    + "      ,lr.[reason]\n"
-                    + "      ,lr.[from]\n"
-                    + "      ,lr.[to]\n"
-                    + "      ,lr.[status]\n"
-                    + "      ,u.[username] as [createdbyusername]\n"
-                    + "	  ,u.[displayname] as [createdbydisplayname]\n"
-                    + "      ,lr.[createddate]\n"
-                    + "      ,e.eid\n"
-                    + "	  ,e.ename\n"
-                    + "      ,p.[username] as [processedbyusername]\n"
-                    + "	  ,p.[displayname] as [processedbydisplayname]\n"
-                    + "  FROM [LeaveRequests] lr\n"
-                    + "	INNER JOIN Users u ON u.username = lr.createby\n"
-                    + "	INNER JOIN Employees e ON e.eid = lr.owner_eid\n"
-                    + "	INNER JOIN Departments d ON d.did = e.did\n"
-                    + "	LEFT JOIN Users p ON p.username = lr.processedby\n"
-                    + "	WHERE lr.owner_eid = ?\n"
-                    + " ORDER BY lrid DESC \n"
-                    + "OFFSET (?-1)*? ROWS\n"
-                    + "FETCH NEXT ? ROWS ONLY;";
-            PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1, ownerEid);
-            stm.setInt(2, pageindex);
-            stm.setInt(3, pagesize);
-            stm.setInt(4, pagesize);
+            StringBuilder sqlBuilder = new StringBuilder();
+            sqlBuilder.append("SELECT lr.[lrid]\n")
+                    .append("      ,lr.[title]\n")
+                    .append("      ,lr.[reason]\n")
+                    .append("      ,lr.[from]\n")
+                    .append("      ,lr.[to]\n")
+                    .append("      ,lr.[status]\n")
+                    .append("      ,u.[username] as [createdbyusername]\n")
+                    .append("      ,u.[displayname] as [createdbydisplayname]\n")
+                    .append("      ,lr.[createddate]\n")
+                    .append("      ,e.eid\n")
+                    .append("      ,e.ename\n")
+                    .append("      ,p.[username] as [processedbyusername]\n")
+                    .append("      ,p.[displayname] as [processedbydisplayname]\n")
+                    .append("  FROM [LeaveRequests] lr\n")
+                    .append("  INNER JOIN Users u ON u.username = lr.createby\n")
+                    .append("  INNER JOIN Employees e ON e.eid = lr.owner_eid\n")
+                    .append("  INNER JOIN Departments d ON d.did = e.did\n")
+                    .append("  LEFT JOIN Users p ON p.username = lr.processedby\n")
+                    .append("  WHERE lr.owner_eid IN (");
+
+            // Dynamically build the IN clause parameters
+            for (int i = 0; i < eids.size(); i++) {
+                if (i > 0) {
+                    sqlBuilder.append(", ");
+                }
+                sqlBuilder.append("?");
+            }
+
+            sqlBuilder.append(")\n")
+                    .append("  ORDER BY lrid DESC \n")
+                    .append("  OFFSET (?-1)*? ROWS\n")
+                    .append("  FETCH NEXT ? ROWS ONLY;");
+
+            PreparedStatement stm = connection.prepareStatement(sqlBuilder.toString());
+
+            int index = 1;
+            for (int eid : eids) {
+                stm.setInt(index++, eid);
+            }
+
+            stm.setInt(index++, pageindex);
+            stm.setInt(index++, pagesize);
+            stm.setInt(index++, pagesize);
+
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 LeaveRequest lr = new LeaveRequest();
@@ -88,6 +154,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                     processby.setDisplayname(rs.getString("processedbydisplayname"));
                     lr.setProcessedby(processby);
                 }
+
                 lrList.add(lr);
             }
         } catch (SQLException ex) {
@@ -298,6 +365,10 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
 //        dao.insert(model);
 
 //        System.out.println(dao.list(1, 1));
+//        List<Integer> i = new ArrayList<>();
+//        i.add(1);
+//        i.add(3);
+//        System.out.println(dao.list(1, 3, i));
     }
 
 }

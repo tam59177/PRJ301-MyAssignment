@@ -11,6 +11,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import model.LeaveRequest;
 import model.User;
 
@@ -31,8 +33,11 @@ public class LeaveRequestController extends BaseRequiredAuthenticationController
         int pageindex = Integer.parseInt(raw_pageindex);
 
         LeaveRequestDBContext db = new LeaveRequestDBContext();
+        List<Integer> eidList = new LinkedList();
+        eidList = db.getListEidManage(user.getEmployee().getId());
 
-        ArrayList<LeaveRequest> lrList = db.list(pageindex, pagesize, user.getEmployee().getId());
+        db = new LeaveRequestDBContext();
+        ArrayList<LeaveRequest> lrList = db.list(pageindex, pagesize, eidList);
         db = new LeaveRequestDBContext();
         int count = db.count();
         int totalpage = (count % pagesize == 0) ? (count / pagesize) : (count / pagesize) + 1;

@@ -192,7 +192,7 @@
                         <div id="botpagger" class="pagger"></div>
                     </c:when>
                     <c:otherwise>
-                        <p calss="text-center">No Leave Request Yet! Good Jobs</p>
+                        <p class="text-center">No Leave Request Yet! Good Jobs</p>
                     </c:otherwise>
                 </c:choose>
             </div>
