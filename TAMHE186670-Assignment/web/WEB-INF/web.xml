@@ -20,6 +20,10 @@
         <servlet-name>LeaveRequestController</servlet-name>
         <servlet-class>controller.leaverequest.LeaveRequestController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DetailLeaveRequestController</servlet-name>
+        <servlet-class>controller.leaverequest.DetailLeaveRequestController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -42,6 +46,10 @@
     <servlet-mapping>
         <servlet-name>LeaveRequestController</servlet-name>
         <url-pattern>/leaverequest</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DetailLeaveRequestController</servlet-name>
+        <url-pattern>/leaverequest/detail</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

@@ -73,5 +73,10 @@ public class LeaveRequest extends BaseModel {
     public void setProcessedby(User processedby) {
         this.processedby = processedby;
     }
+
+    @Override
+    public String toString() {
+        return "LeaveRequest{" + "title=" + title + ", reason=" + reason + ", from=" + from + ", to=" + to + ", status=" + status + ", owner=" + owner + ", processedby=" + processedby + '}';
+    }
     
 }

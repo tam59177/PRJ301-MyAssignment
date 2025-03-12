@@ -52,18 +52,18 @@
                 <form action="" method="">
                     <div class="detail-main">
                         <div class="detail-header text-center">
-                            <h4>Tâm xin nghỉ học</h4>
+                            <h4>${lr.title}</h4>
                         </div>
                         <div class="detail-body d-flex justify-content-center gap-5">
                             <div class="">
-                                <h5>Reason: Tam xin nghi học</h5>
-                                <p>From: 12-03-2025</p>
-                                <p>To: 16-03-2025</p>
-                                <p>Status: Inprogress</p>
+                                <h5>Reason: ${lr.reason}</h5>
+                                <p>From: ${lr.from}</p>
+                                <p>To: ${lr.to}</p>
+                                <p>Status: ${lr.status}</p>
                             </div>
                             <div class="">
-                                <p>Created By: Tam</p>
-                                <p>Created Date: 2025-03-11 15:22:59.210</p>
+                                <p>Created By: ${lr.createdby.username}</p>
+                                <p>Created Date: ${lr.createddate}</p>
                             </div>
                         </div>
                         <div class="detail-footer text-center">

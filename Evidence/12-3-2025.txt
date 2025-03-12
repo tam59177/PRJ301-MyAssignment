@@ -1,3 +1,17 @@
 ChatGPT: detail-body row d-flex justify-items-center la gi
 
 ChatGPT: css bằng bootstrap
+
+ChatGPT: private boolean isAllowedAccess(User u, HttpServletRequest req) {
+        String current_endpoint = req.getServletPath();
+        for (Role role : u.getRoles()) {
+            for (Feature feature : role.getFeatures()) {
+                if (feature.getUrl().equals(current_endpoint)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+feature i have insert to db like /leaverequest/detail, but the problem is what if exist feature have params behind

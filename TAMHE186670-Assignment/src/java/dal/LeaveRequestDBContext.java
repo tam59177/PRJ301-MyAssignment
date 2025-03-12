@@ -192,7 +192,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                     + "      ,p.[username] as [processedbyusername]\n"
                     + "	  ,p.[displayname] as [processedbydisplayname]\n"
                     + "  FROM [LeaveRequests] lr\n"
-                    + "	INNER JOIN Users u ON u.username = lr.createdby\n"
+                    + "	INNER JOIN Users u ON u.username = lr.createby\n"
                     + "	INNER JOIN Employees e ON e.eid = lr.owner_eid\n"
                     + "	INNER JOIN Departments d ON d.did = e.did\n"
                     + "	LEFT JOIN Users p ON p.username = lr.processedby\n"
@@ -368,7 +368,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
 //        List<Integer> i = new ArrayList<>();
 //        i.add(1);
 //        i.add(3);
-//        System.out.println(dao.list(1, 3, i));
+        System.out.println(dao.get(2));
     }
 
 }

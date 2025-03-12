@@ -73,7 +73,7 @@
                                         <td>${l.createdby.username}</td>
                                         <td>${l.status}</td>
                                         <td>${l.processedby.username}</td>
-                                        <td><a href="#">See detail</a></td>
+                                        <td><a href="leaverequest/detail?lrid=${l.id}">See detail</a></td>
                                     </tr>
                                 </c:forEach>
                             </tbody>
