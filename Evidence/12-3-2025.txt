@@ -1,0 +1,3 @@
+ChatGPT: detail-body row d-flex justify-items-center la gi
+
+ChatGPT: css bằng bootstrap
