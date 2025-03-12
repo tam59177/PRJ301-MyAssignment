@@ -8,7 +8,7 @@ Claude AI: Cách đổ bóng cho div
 
 Chat GPT: Cách tích hợp thư viện để gửi mail khi code web java
 
-ChatGPT: how about welcome file is a controller
+ChatGPT: thế còn tệp chào mừng là một bộ điều khiển
 
 ChatGPT: i want to direct add a controller to become a welcome file - Solution: change login controller parttern to "/"
 
