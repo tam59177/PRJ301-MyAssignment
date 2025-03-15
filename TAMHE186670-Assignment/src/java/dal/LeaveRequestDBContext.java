@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Employee;
 import model.User;
 
 public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
@@ -184,6 +185,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                     + "      ,lr.[from]\n"
                     + "      ,lr.[to]\n"
                     + "      ,lr.[status]\n"
+                    + "      ,lr.[owner_eid]\n"
                     + "      ,u.[username] as [createdbyusername]\n"
                     + "	  ,u.[displayname] as [createdbydisplayname]\n"
                     + "      ,lr.[createddate]\n"
@@ -216,6 +218,10 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                 createdby.setDisplayname(rs.getString("createdbydisplayname"));
                 lr.setCreatedby(createdby);
 
+                Employee owner = new Employee();
+                owner.setId(rs.getInt("owner_eid"));
+                lr.setOwner(owner);
+                
                 String processbyusername = rs.getString("processedbyusername");
                 if (processbyusername != null) {
                     User processby = new User();
@@ -368,7 +374,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
 //        List<Integer> i = new ArrayList<>();
 //        i.add(1);
 //        i.add(3);
-        System.out.println(dao.get(2));
+        System.out.println(dao.getListEidManage(3));
     }
 
 }

@@ -10,6 +10,7 @@ import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import model.LeaveRequest;
 import model.User;
 
@@ -25,8 +26,30 @@ public class DetailLeaveRequestController extends BaseRequiredAuthenticationCont
         LeaveRequestDBContext db = new LeaveRequestDBContext();
         int lrid = Integer.parseInt(req.getParameter("lrid"));
         LeaveRequest lr = db.get(lrid);
-        req.setAttribute("lr", lr);
-        req.getRequestDispatcher("/view/request/detail.jsp").forward(req, resp);
+
+        boolean isValidView = false;
+
+        if (user.getEmployee().getId() == lr.getOwner().getId()) {
+            isValidView = true;
+        } else {
+            db = new LeaveRequestDBContext();
+            List<Integer> listEidValid = db.getListEidManage(user.getEmployee().getId());
+
+            for (Integer i : listEidValid) {
+                if (lr.getOwner().getId() == i) {
+                    isValidView = true;
+                    break;
+                }
+            }
+        }
+
+        if (isValidView) {
+            req.setAttribute("lr", lr);
+            req.getRequestDispatcher("/view/request/detail.jsp").forward(req, resp);
+        } else {
+            req.setAttribute("errmessage", "Access Denied!");
+            req.getRequestDispatcher("/leaverequest").forward(req, resp);
+        }
     }
 
 }

@@ -3,3 +3,15 @@ ClaudeAI: Dán 2 file request.jsp và create.jsp : Change create.jsp into modal 
 ClaudeAI: Modal boostrap là gì?
 
 ClaudeAI: Cách sử dụng bootstrap làm modal
+
+ClaudeAI:<c:if test="${not empty errmessage}">
+
+                <div class="alert alert-danger" role="alert">
+
+                    <p>${errmessage}</p>
+
+                </div>
+
+            </c:if>
+
+make this disappear in 2 second

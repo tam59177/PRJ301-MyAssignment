@@ -33,7 +33,7 @@ public class CreateLeaveRequestController extends BaseRequiredAuthenticationCont
         db.insert(lr);
         
         req.setAttribute("message", "Submit Leave Request Success!");
-        req.getRequestDispatcher("view/request/request.jsp").forward(req, resp);
+        req.getRequestDispatcher("/leaverequest").forward(req, resp);
     }
     
     @Override
