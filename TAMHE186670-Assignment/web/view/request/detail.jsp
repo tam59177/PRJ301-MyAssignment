@@ -66,14 +66,16 @@
                                 <p>Created Date: ${lr.createddate}</p>
                             </div>
                         </div>
-                        <div class="detail-footer text-center">
-                            <div class="btn btn-success">
-                                <a href="${pageContext.request.contextPath}/leaverequest/edit?type=state" class="text-light">Approve</a>
+                        <c:if test="${canManage == true}">
+                            <div class="detail-footer text-center">
+                                <div class="btn btn-success">
+                                    <a href="${pageContext.request.contextPath}/leaverequest/update?type=state" class="text-light">Approve</a>
+                                </div>
+                                <div class="btn btn-danger">
+                                    <a href="${pageContext.request.contextPath}/leaverequest/update?type=state" class="text-light">Reject</a>
+                                </div>
                             </div>
-                            <div class="btn btn-danger">
-                                <a href="${pageContext.request.contextPath}/leaverequest/edit?type=state" class="text-light">Reject</a>
-                            </div>
-                        </div>
+                        </c:if>
                     </div>
                 </form>
             </div>
@@ -90,7 +92,7 @@
                     <div class="modal-body">
                         <form action="${pageContext.request.contextPath}/leaverequest/update" method="POST">
                             <input type="hidden" name="lrid" value="${lr.id}" />
-                            
+
                             <!-- Title -->
                             <div class="mb-3">
                                 <label for="title" class="form-label">Title</label>

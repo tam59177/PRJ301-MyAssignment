@@ -28,15 +28,18 @@ public class DetailLeaveRequestController extends BaseRequiredAuthenticationCont
         LeaveRequest lr = db.get(lrid);
 
         boolean isValidView = false;
+        boolean canManage = false;
 
         if (user.getEmployee().getId() == lr.getOwner().getId()) {
             isValidView = true;
+            canManage = false;
         } else {
             db = new LeaveRequestDBContext();
             List<Integer> listEidValid = db.getListEidManage(user.getEmployee().getId());
 
             for (Integer i : listEidValid) {
                 if (lr.getOwner().getId() == i) {
+                    canManage = true;
                     isValidView = true;
                     break;
                 }
@@ -45,11 +48,11 @@ public class DetailLeaveRequestController extends BaseRequiredAuthenticationCont
 
         if (isValidView) {
             req.setAttribute("lr", lr);
+            req.setAttribute("canManage", canManage);
             req.getRequestDispatcher("/view/request/detail.jsp").forward(req, resp);
         } else {
             req.setAttribute("errmessage", "Access Denied!");
             req.getRequestDispatcher("/leaverequest").forward(req, resp);
         }
     }
-
 }
