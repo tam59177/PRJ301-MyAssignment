@@ -15,3 +15,10 @@ ClaudeAI:<c:if test="${not empty errmessage}">
             </c:if>
 
 make this disappear in 2 second
+
+ClaudeAI: data-bs-toggle="modal"
+
+this will talk to boostrap that it will toogle class have name modal right ?
+
+ClaudeAI: copy paste 2 file request.jsp và detail.jsp
+When user update leave request in updatemodal of detail page, then servlet forwade to request.jsp, why create modal of request.jsp auto display ?

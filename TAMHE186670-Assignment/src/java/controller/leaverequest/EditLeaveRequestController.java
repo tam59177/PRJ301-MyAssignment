@@ -5,10 +5,13 @@
 package controller.leaverequest;
 
 import controller.authentication.BaseRecordAccessControlByOwnerController;
+import dal.LeaveRequestDBContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Date;
+import model.Employee;
 import model.LeaveRequest;
 import model.User;
 
@@ -16,12 +19,13 @@ public class EditLeaveRequestController extends BaseRecordAccessControlByOwnerCo
 
     @Override
     protected LeaveRequest getModel(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        LeaveRequestDBContext db = new LeaveRequestDBContext();
+        return db.get(id);
     }
 
     @Override
     protected String getAccessDeniedMessage(User u, LeaveRequest model) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return "You are not the author of that leave request " + model.getId();
     }
 
     @Override
@@ -31,9 +35,18 @@ public class EditLeaveRequestController extends BaseRecordAccessControlByOwnerCo
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp, User user, LeaveRequest model) throws ServletException, IOException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+        LeaveRequest lr = new LeaveRequest();
+        lr.setId(Integer.parseInt(req.getParameter("lrid")));
+        lr.setTitle(req.getParameter("title"));
+        lr.setReason(req.getParameter("reason"));
+        lr.setFrom(Date.valueOf(req.getParameter("from")));
+        lr.setTo(Date.valueOf(req.getParameter("to")));
 
-    
+        LeaveRequestDBContext db = new LeaveRequestDBContext();
+        db.update(lr);
+
+        req.setAttribute("message", "Update Leave Request Success!");
+        req.getRequestDispatcher("/leaverequest").forward(req, resp);
+    }
 
 }

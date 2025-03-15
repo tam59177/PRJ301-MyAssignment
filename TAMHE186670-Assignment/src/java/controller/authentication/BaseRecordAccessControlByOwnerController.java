@@ -26,12 +26,13 @@ public abstract class BaseRecordAccessControlByOwnerController<T extends BaseMod
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-        T model = getModel(Integer.parseInt(req.getParameter("id")));
+        T model = getModel(Integer.parseInt(req.getParameter("lrid")));
         if (isAllowedAccess(model, user)) {
             //do business
             doPost(req, resp, user, model);
         } else {
-            resp.getWriter().println(getAccessDeniedMessage(user, model));
+            req.setAttribute("errmessage", getAccessDeniedMessage(user, model));
+            req.getRequestDispatcher("/leaverequest").forward(req, resp);
         }
     }
 
@@ -39,12 +40,13 @@ public abstract class BaseRecordAccessControlByOwnerController<T extends BaseMod
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-        T model = getModel(Integer.parseInt(req.getParameter("id")));
+        T model = getModel(Integer.parseInt(req.getParameter("lrid")));
         if (isAllowedAccess(model, user)) {
             //do business
             doGet(req, resp, user, model);
         } else {
-            resp.getWriter().println(getAccessDeniedMessage(user, model));
+            req.setAttribute("errmessage", getAccessDeniedMessage(user, model));
+            req.getRequestDispatcher("/leaverequest").forward(req, resp);
         }
 
     }

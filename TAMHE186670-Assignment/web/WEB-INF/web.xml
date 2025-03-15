@@ -57,7 +57,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EditLeaveRequestController</servlet-name>
-        <url-pattern>/leaverequest/edit</url-pattern>
+        <url-pattern>/leaverequest/update</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

@@ -41,7 +41,7 @@
                     <a href="${pageContext.request.contextPath}/leaverequest" class="text-light">Back</a>
                 </div>
                 <div class="btn btn-primary">
-                    <a href="${pageContext.request.contextPath}/leaverequest/edit?type=all" class="text-light">Edit Leave Request</a>
+                    <a href="#" class="text-light" data-bs-toggle="modal" data-bs-target="#updateRequestModal">Edit Leave Request</a>
                 </div>
                 <div class="btn btn-danger">
                     <a href="${pageContext.request.contextPath}/leaverequest/delete" class="text-light">Delete Leave Request</a>
@@ -78,6 +78,52 @@
                 </form>
             </div>
         </main>
+
+        <!-- Update Request Modal -->
+        <div class="modal fade" id="updateRequestModal" tabindex="-1" aria-labelledby="updateRequestModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateRequestModalLabel">Update Leave Request</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="${pageContext.request.contextPath}/leaverequest/update" method="POST">
+                            <input type="hidden" name="lrid" value="${lr.id}" />
+                            
+                            <!-- Title -->
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="title" name="title" value="${lr.title}" required>
+                            </div>
+
+                            <!-- Reason -->
+                            <div class="mb-3">
+                                <label for="reason" class="form-label">Reason</label>
+                                <textarea class="form-control" id="reason" name="reason" rows="3" required>${lr.reason}</textarea>
+                            </div>
+
+                            <!-- From Date -->
+                            <div class="mb-3">
+                                <label for="from" class="form-label">From Date</label>
+                                <input type="date" class="form-control" id="from" name="from" value="${lr.from}" required>
+                            </div>
+
+                            <!-- To Date -->
+                            <div class="mb-3">
+                                <label for="to" class="form-label">To Date</label>
+                                <input type="date" class="form-control" id="to" name="to" value="${lr.to}" required>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>

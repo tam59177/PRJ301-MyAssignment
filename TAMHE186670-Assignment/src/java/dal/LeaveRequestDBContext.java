@@ -7,6 +7,7 @@ package dal;
 import java.util.ArrayList;
 import model.LeaveRequest;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -221,7 +222,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                 Employee owner = new Employee();
                 owner.setId(rs.getInt("owner_eid"));
                 lr.setOwner(owner);
-                
+
                 String processbyusername = rs.getString("processedbyusername");
                 if (processbyusername != null) {
                     User processby = new User();
@@ -309,15 +310,13 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                     + "      ,[reason] = ?\n"
                     + "      ,[from] = ?\n"
                     + "      ,[to] = ?\n"
-                    + "      ,[owner_eid] = ?\n"
                     + " WHERE lrid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, model.getTitle());
             stm.setString(2, model.getReason());
             stm.setDate(3, model.getFrom());
             stm.setDate(4, model.getTo());
-            stm.setInt(5, model.getOwner().getId());
-            stm.setInt(6, model.getId());
+            stm.setInt(5, model.getId());
             stm.executeUpdate();
             connection.commit();
         } catch (SQLException ex) {
@@ -349,24 +348,16 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
 
     public static void main(String[] args) {
         LeaveRequestDBContext dao = new LeaveRequestDBContext();
-//        LeaveRequest model = new LeaveRequest();
-//        model.setTitle("Tam xin nghi hoc");
-//        model.setReason("Tai vi em bi om");
-//        model.setStatus("Inprogress");
-//
-//        Employee e = new Employee();
-//        e.setId(1);
-//        model.setOwner(e);
-//
-//        User createdBy = new User();
-//        createdBy.setUsername("tam");
-//        model.setCreatedby(createdBy);
-//
-//        LocalDate from = LocalDate.of(2025, 3, 4);
-//        LocalDate to = LocalDate.of(2025, 3, 6);
-//
-//        model.setFrom(Date.valueOf(from));
-//        model.setTo(Date.valueOf(to));
+        LeaveRequest model = new LeaveRequest();
+        model.setId(1);
+        model.setTitle("testupdate");
+        model.setReason("Tai vi em bi om");
+
+        LocalDate from = LocalDate.of(2025, 3, 4);
+        LocalDate to = LocalDate.of(2025, 3, 6);
+
+        model.setFrom(Date.valueOf(from));
+        model.setTo(Date.valueOf(to));
 //
 //        dao.insert(model);
 
@@ -374,7 +365,8 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
 //        List<Integer> i = new ArrayList<>();
 //        i.add(1);
 //        i.add(3);
-        System.out.println(dao.getListEidManage(3));
+//        System.out.println(dao.getListEidManage(3));
+        dao.update(model);
     }
 
 }

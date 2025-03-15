@@ -16,7 +16,7 @@
                 margin: 0;
                 padding: 0;
             }
-            
+
             * {
                 margin: 0;
                 padding: 0;
@@ -303,11 +303,6 @@
 
             // Show modal automatically if there was an error submitting the form
             document.addEventListener('DOMContentLoaded', function () {
-                if ('${param.errmessage}' !== '' || '${errmessage}' !== '') {
-                    var createModal = new bootstrap.Modal(document.getElementById('createRequestModal'));
-                    createModal.show();
-                }
-
                 // Handle fadeout and removal of alerts after animation completes
                 const alerts = document.querySelectorAll('.alert.fade-out');
 
