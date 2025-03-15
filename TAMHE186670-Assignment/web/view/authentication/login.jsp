@@ -43,12 +43,29 @@
                 padding: 0;
                 margin: 0;
             }
+
+            .fade-out {
+                animation: fadeOut 2s forwards;
+            }
+
+            @keyframes fadeOut {
+                0% {
+                    opacity: 1;
+                }
+                70% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                    display: none;
+                }
+            }
         </style>
     </head>
     <body class="text-center">
         <main class="form-signin w-100 m-auto">
             <c:if test="${not empty message}">
-                <div class="alert alert-danger" role="alert">
+                <div class="alert fade-out alert-danger" role="alert">
                     <p>${message}</p>
                 </div>
             </c:if>
@@ -77,5 +94,18 @@
         </main>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Show modal automatically if there was an error submitting the form
+            document.addEventListener('DOMContentLoaded', function () {
+                // Handle fadeout and removal of alerts after animation completes
+                const alerts = document.querySelectorAll('.alert.fade-out');
+
+                alerts.forEach(alert => {
+                    setTimeout(() => {
+                        alert.style.display = 'none';
+                    }, 2000); // Remove from DOM after 2 seconds
+                });
+            });
+        </script>
     </body>
 </html>
