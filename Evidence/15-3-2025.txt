@@ -1,0 +1,5 @@
+ClaudeAI: Dán 2 file request.jsp và create.jsp : Change create.jsp into modal of request.jsp for me
+
+ClaudeAI: Modal boostrap là gì?
+
+ClaudeAI: Cách sử dụng bootstrap làm modal

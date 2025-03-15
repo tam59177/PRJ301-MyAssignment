@@ -43,7 +43,7 @@
             <!-- Recent Contacts Table -->
             <div class="welcome-container">
                 <div class="btn btn-primary">
-                    <a href="${pageContext.request.contextPath}/leaverequest/create" class="text-light">Create Leave Request</a>
+                    <a href="#" class="text-light" data-bs-toggle="modal" data-bs-target="#createRequestModal">Create Leave Request</a>
                 </div>
             </div>
 
@@ -86,6 +86,50 @@
                 </c:choose>
             </div>
         </main>
+
+        <!-- Create Request Modal -->
+        <div class="modal fade" id="createRequestModal" tabindex="-1" aria-labelledby="createRequestModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createRequestModalLabel">Create Leave Request</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="${pageContext.request.contextPath}/leaverequest/create" method="POST">
+                            <!-- Title -->
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+
+                            <!-- Reason -->
+                            <div class="mb-3">
+                                <label for="reason" class="form-label">Reason</label>
+                                <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
+                            </div>
+
+                            <!-- From Date -->
+                            <div class="mb-3">
+                                <label for="from" class="form-label">From Date</label>
+                                <input type="date" class="form-control" id="from" name="from" required>
+                            </div>
+
+                            <!-- To Date -->
+                            <div class="mb-3">
+                                <label for="to" class="form-label">To Date</label>
+                                <input type="date" class="form-control" id="to" name="to" required>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Submit Request</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
