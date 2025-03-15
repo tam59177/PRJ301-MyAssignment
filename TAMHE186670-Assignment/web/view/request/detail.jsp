@@ -49,35 +49,39 @@
             </div>
 
             <div class="request-detail-container d-flex justify-content-center">
-                <form action="" method="">
-                    <div class="detail-main">
-                        <div class="detail-header text-center">
-                            <h4>${lr.title}</h4>
-                        </div>
-                        <div class="detail-body d-flex justify-content-center gap-5">
-                            <div class="">
-                                <h5>Reason: ${lr.reason}</h5>
-                                <p>From: ${lr.from}</p>
-                                <p>To: ${lr.to}</p>
-                                <p>Status: ${lr.status}</p>
-                            </div>
-                            <div class="">
-                                <p>Created By: ${lr.createdby.username}</p>
-                                <p>Created Date: ${lr.createddate}</p>
-                            </div>
-                        </div>
-                        <c:if test="${canManage == true}">
-                            <div class="detail-footer text-center">
-                                <div class="btn btn-success">
-                                    <a href="${pageContext.request.contextPath}/leaverequest/update?type=state" class="text-light">Approve</a>
-                                </div>
-                                <div class="btn btn-danger">
-                                    <a href="${pageContext.request.contextPath}/leaverequest/update?type=state" class="text-light">Reject</a>
-                                </div>
-                            </div>
-                        </c:if>
+                <div class="detail-main">
+                    <div class="detail-header text-center">
+                        <h4>${lr.title}</h4>
                     </div>
-                </form>
+                    <div class="detail-body d-flex justify-content-center gap-5">
+                        <div class="">
+                            <h5>Reason: ${lr.reason}</h5>
+                            <p>From: ${lr.from}</p>
+                            <p>To: ${lr.to}</p>
+                            <p>Status: ${lr.status}</p>
+                        </div>
+                        <div class="">
+                            <p>Created By: ${lr.createdby.username}</p>
+                            <p>Created Date: ${lr.createddate}</p>
+                        </div>
+                    </div>
+                    <c:if test="${canManage == true}">
+                        <div class="detail-footer text-center d-flex gap-2 justify-content-center">
+                            <form action="${pageContext.request.contextPath}/leaverequest/update" method="POST">
+                                <input type="hidden" name="type" value="state" />
+                                <input type="hidden" name="state" value="Approved" />
+                                <input type="hidden" name="lrid" value="${lr.id}" />
+                                <button type="submit" class="btn btn-success">Approve</button>
+                            </form>
+                            <form action="${pageContext.request.contextPath}/leaverequest/update" method="POST">
+                                <input type="hidden" name="type" value="state" />
+                                <input type="hidden" name="state" value="Rejected" />
+                                <input type="hidden" name="lrid" value="${lr.id}" />
+                                <button type="submit" class="btn btn-danger">Reject</button>
+                            </form>
+                        </div>
+                    </c:if>
+                </div>
             </div>
         </main>
 
@@ -92,6 +96,7 @@
                     <div class="modal-body">
                         <form action="${pageContext.request.contextPath}/leaverequest/update" method="POST">
                             <input type="hidden" name="lrid" value="${lr.id}" />
+                            <input type="hidden" name="type" value="all" />
 
                             <!-- Title -->
                             <div class="mb-3">
@@ -128,8 +133,5 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            pagger('botpagger',${requestScope.pageindex},${requestScope.totalpage}, 2);
-        </script>
     </body>
 </html>

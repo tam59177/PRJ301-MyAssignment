@@ -16,7 +16,40 @@ import model.Employee;
 import model.User;
 
 public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
-
+    
+    public void updateLeaveRequestState(String state, int lrid) {
+        try {
+            connection.setAutoCommit(false);
+            String sql = "UPDATE [LeaveRequests]\n"
+                    + "   SET [status] = ?\n"
+                    + " WHERE lrid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, state);
+            stm.setInt(2, lrid);
+            stm.executeUpdate();
+            connection.commit();
+        } catch (SQLException ex) {
+            Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                connection.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (connection != null)
+                try {
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     public List<Integer> getListEidManage(int managerEid) {
         List<Integer> eidList = new LinkedList<>();
         try {
@@ -38,16 +71,16 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                     + "SELECT eid\n"
                     + "FROM EmployeeHierarchy\n"
                     + "ORDER BY eid;";
-
+            
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, managerEid);
-
+            
             ResultSet rs = st.executeQuery();
-
+            
             while (rs.next()) {
                 eidList.add(rs.getInt("eid"));
             }
-
+            
         } catch (SQLException ex) {
             Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -58,10 +91,10 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                 Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
+        
         return eidList;
     }
-
+    
     public int count() {
         try {
             String sql = "SELECT COUNT(*) FROM LeaveRequests";
@@ -81,12 +114,12 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
             }
         }
         return -1;
-
+        
     }
-
+    
     public ArrayList<LeaveRequest> list(int pageindex, int pagesize, List<Integer> eids) {
         ArrayList<LeaveRequest> lrList = new ArrayList<>();
-
+        
         try {
             StringBuilder sqlBuilder = new StringBuilder();
             sqlBuilder.append("SELECT lr.[lrid]\n")
@@ -116,23 +149,23 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                 }
                 sqlBuilder.append("?");
             }
-
+            
             sqlBuilder.append(")\n")
                     .append("  ORDER BY lrid DESC \n")
                     .append("  OFFSET (?-1)*? ROWS\n")
                     .append("  FETCH NEXT ? ROWS ONLY;");
-
+            
             PreparedStatement stm = connection.prepareStatement(sqlBuilder.toString());
-
+            
             int index = 1;
             for (int eid : eids) {
                 stm.setInt(index++, eid);
             }
-
+            
             stm.setInt(index++, pageindex);
             stm.setInt(index++, pagesize);
             stm.setInt(index++, pagesize);
-
+            
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 LeaveRequest lr = new LeaveRequest();
@@ -143,12 +176,12 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                 lr.setTo(rs.getDate("to"));
                 lr.setStatus(rs.getString("status"));
                 lr.setCreateddate(rs.getTimestamp("createddate"));
-
+                
                 User createdby = new User();
                 createdby.setUsername(rs.getString("createdbyusername"));
                 createdby.setDisplayname(rs.getString("createdbydisplayname"));
                 lr.setCreatedby(createdby);
-
+                
                 String processbyusername = rs.getString("processedbyusername");
                 if (processbyusername != null) {
                     User processby = new User();
@@ -156,7 +189,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                     processby.setDisplayname(rs.getString("processedbydisplayname"));
                     lr.setProcessedby(processby);
                 }
-
+                
                 lrList.add(lr);
             }
         } catch (SQLException ex) {
@@ -171,12 +204,12 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
         }
         return lrList;
     }
-
+    
     @Override
     public ArrayList<LeaveRequest> list() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
     @Override
     public LeaveRequest get(int id) {
         try {
@@ -200,7 +233,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                     + "	INNER JOIN Departments d ON d.did = e.did\n"
                     + "	LEFT JOIN Users p ON p.username = lr.processedby\n"
                     + "WHERE lr.lrid = ?";
-
+            
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
@@ -213,16 +246,18 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                 lr.setTo(rs.getDate("to"));
                 lr.setStatus(rs.getString("status"));
                 lr.setCreateddate(rs.getTimestamp("createddate"));
-
+                
                 User createdby = new User();
                 createdby.setUsername(rs.getString("createdbyusername"));
                 createdby.setDisplayname(rs.getString("createdbydisplayname"));
-                lr.setCreatedby(createdby);
-
+                
                 Employee owner = new Employee();
                 owner.setId(rs.getInt("owner_eid"));
                 lr.setOwner(owner);
-
+                
+                createdby.setEmployee(owner);
+                lr.setCreatedby(createdby);
+                
                 String processbyusername = rs.getString("processedbyusername");
                 if (processbyusername != null) {
                     User processby = new User();
@@ -237,7 +272,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
         }
         return null;
     }
-
+    
     @Override
     public void insert(LeaveRequest model) {
         try {
@@ -298,9 +333,9 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                 Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
+        
     }
-
+    
     @Override
     public void update(LeaveRequest model) {
         try {
@@ -340,22 +375,22 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
             }
         }
     }
-
+    
     @Override
     public void delete(LeaveRequest model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
     public static void main(String[] args) {
         LeaveRequestDBContext dao = new LeaveRequestDBContext();
         LeaveRequest model = new LeaveRequest();
         model.setId(1);
         model.setTitle("testupdate");
         model.setReason("Tai vi em bi om");
-
+        
         LocalDate from = LocalDate.of(2025, 3, 4);
         LocalDate to = LocalDate.of(2025, 3, 6);
-
+        
         model.setFrom(Date.valueOf(from));
         model.setTo(Date.valueOf(to));
 //
@@ -366,7 +401,7 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
 //        i.add(1);
 //        i.add(3);
 //        System.out.println(dao.getListEidManage(3));
-        dao.update(model);
+        dao.updateLeaveRequestState("Approved", 1);
     }
-
+    
 }

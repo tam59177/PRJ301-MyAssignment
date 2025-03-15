@@ -35,18 +35,32 @@ public class EditLeaveRequestController extends BaseRecordAccessControlByOwnerCo
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp, User user, LeaveRequest model) throws ServletException, IOException {
-        LeaveRequest lr = new LeaveRequest();
-        lr.setId(Integer.parseInt(req.getParameter("lrid")));
-        lr.setTitle(req.getParameter("title"));
-        lr.setReason(req.getParameter("reason"));
-        lr.setFrom(Date.valueOf(req.getParameter("from")));
-        lr.setTo(Date.valueOf(req.getParameter("to")));
+        String type = req.getParameter("type");
+        LeaveRequestDBContext db;
 
-        LeaveRequestDBContext db = new LeaveRequestDBContext();
-        db.update(lr);
+        switch (type) {
+            case "all":
+                model.setTitle(req.getParameter("title"));
+                model.setReason(req.getParameter("reason"));
+                model.setFrom(Date.valueOf(req.getParameter("from")));
+                model.setTo(Date.valueOf(req.getParameter("to")));
 
-        req.setAttribute("message", "Update Leave Request Success!");
-        req.getRequestDispatcher("/leaverequest").forward(req, resp);
+                db = new LeaveRequestDBContext();
+                db.update(model);
+
+                req.setAttribute("message", "Update Leave Request Success!");
+                req.getRequestDispatcher("/leaverequest").forward(req, resp);
+                break;
+            case "state":
+                String state = req.getParameter("state");
+
+                db = new LeaveRequestDBContext();
+                db.updateLeaveRequestState(state, model.getId());
+
+                req.setAttribute("message", state + " Leave Request Success!");
+                req.getRequestDispatcher("/leaverequest").forward(req, resp);
+                break;
+        }
     }
 
 }

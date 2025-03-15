@@ -4,10 +4,12 @@
  */
 package controller.authentication;
 
+import dal.LeaveRequestDBContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import model.BaseModel;
 import model.User;
 
@@ -18,8 +20,22 @@ import model.User;
 public abstract class BaseRecordAccessControlByOwnerController<T extends BaseModel>
         extends BaseRequiredAuthenticationController {
 
-    private boolean isAllowedAccess(T entity, User user) {
-        return (entity.getCreatedby().getUsername().equals(user.getUsername()));
+    private boolean isAllowedAccess(T entity, User user, String type) {
+        switch (type) {
+            case "all":
+                return (entity.getCreatedby().getUsername().equals(user.getUsername()));
+            case "state":
+                LeaveRequestDBContext db = new LeaveRequestDBContext();
+                List<Integer> listEidValid = db.getListEidManage(user.getEmployee().getId());
+
+                for (Integer i : listEidValid) {
+                    if (entity.getCreatedby().getEmployee().getId() == i) {
+                        return true;
+                    }
+                }
+            default:
+                return (entity.getCreatedby().getUsername().equals(user.getUsername()));
+        }
     }
 
     protected abstract T getModel(int id);
@@ -27,7 +43,8 @@ public abstract class BaseRecordAccessControlByOwnerController<T extends BaseMod
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
         T model = getModel(Integer.parseInt(req.getParameter("lrid")));
-        if (isAllowedAccess(model, user)) {
+        String type = req.getParameter("type");
+        if (isAllowedAccess(model, user, type)) {
             //do business
             doPost(req, resp, user, model);
         } else {
@@ -41,7 +58,8 @@ public abstract class BaseRecordAccessControlByOwnerController<T extends BaseMod
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
         T model = getModel(Integer.parseInt(req.getParameter("lrid")));
-        if (isAllowedAccess(model, user)) {
+        String type = req.getParameter("type");
+        if (isAllowedAccess(model, user, type)) {
             //do business
             doGet(req, resp, user, model);
         } else {

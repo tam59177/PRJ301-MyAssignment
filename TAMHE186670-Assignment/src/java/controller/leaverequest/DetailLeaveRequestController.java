@@ -46,6 +46,10 @@ public class DetailLeaveRequestController extends BaseRequiredAuthenticationCont
             }
         }
 
+        if (!lr.getStatus().equalsIgnoreCase("Inprogress")) {
+            canManage = false;
+        }
+
         if (isValidView) {
             req.setAttribute("lr", lr);
             req.setAttribute("canManage", canManage);
