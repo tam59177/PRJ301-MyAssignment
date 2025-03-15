@@ -14,12 +14,46 @@ import model.Department;
 import model.Employee;
 
 public class EmployeeDBContext extends DBContext<Employee> {
-
+    
     @Override
     public ArrayList<Employee> list() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ArrayList<Employee> employees = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM Employees";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Employee e = new Employee();
+                e.setId(rs.getInt("eid"));
+                e.setName(rs.getString("ename"));
+                e.setEmail(rs.getString("email"));
+                
+                Employee manager = new Employee();
+                manager.setId(rs.getInt("managerid"));
+                
+                e.setManager(manager);
+                
+                Department d = new Department();
+                d.setId(rs.getInt("did"));
+                
+                e.setDept(d);
+                
+                employees.add(e);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (connection != null)
+                try {
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return employees;
     }
-
+    
     @Override
     public Employee get(int id) {
         ArrayList<Employee> employees = new ArrayList<>();
@@ -84,7 +118,7 @@ public class EmployeeDBContext extends DBContext<Employee> {
             return null;
         }
     }
-
+    
     private Employee getDirectManager(ArrayList<Employee> emps, Employee e) {
         for (Employee emp : emps) {
             if (e.getManager().getId() == emp.getId()) {
@@ -93,20 +127,24 @@ public class EmployeeDBContext extends DBContext<Employee> {
         }
         return null;
     }
-
+    
     @Override
     public void insert(Employee model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
     @Override
     public void update(Employee model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
     @Override
     public void delete(Employee model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
+    public static void main(String[] args) {
+        EmployeeDBContext dao = new EmployeeDBContext();
+        System.out.println(dao.list().size());
+    }
 }

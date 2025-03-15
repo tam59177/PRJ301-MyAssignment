@@ -12,10 +12,90 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Agenda;
+import model.Department;
 import model.Employee;
 import model.User;
 
 public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
+    
+    public List<Agenda> getListAgendaModel() {
+        List<Agenda> aList = new ArrayList<>();
+        
+        try {
+            connection.setAutoCommit(false);
+            String sql = "-- Tạo bảng các ngày từ ngày bắt đầu đến ngày kết thúc của mỗi yêu cầu nghỉ phép\n"
+                    + "WITH DateRange AS (\n"
+                    + "    SELECT \n"
+                    + "        lr.lrid,\n"
+                    + "        lr.owner_eid,\n"
+                    + "        lr.[from], \n"
+                    + "        lr.[to],\n"
+                    + "        DATEADD(DAY, number, lr.[from]) AS off_date\n"
+                    + "    FROM [MyAssignment].[dbo].[LeaveRequests] lr\n"
+                    + "    CROSS APPLY (\n"
+                    + "        SELECT TOP (DATEDIFF(DAY, lr.[from], lr.[to]) + 1) \n"
+                    + "            number = ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) - 1\n"
+                    + "        FROM master.dbo.spt_values\n"
+                    + "    ) AS Numbers\n"
+                    + "    WHERE lr.status = 'Approved' -- Giả sử chỉ lấy các yêu cầu nghỉ phép đã được duyệt\n"
+                    + ")\n"
+                    + "\n"
+                    + "-- Truy vấn chính để lấy kết quả với thông tin nhân viên\n"
+                    + "SELECT \n"
+                    + "    e.eid AS EmployeeID,\n"
+                    + "    e.ename AS EmployeeName,\n"
+                    + "    e.email AS EmployeeEmail,\n"
+                    + "    e.managerid AS ManagerID,\n"
+                    + "    e.did AS DepartmentID,\n"
+                    + "    dr.off_date AS OffWorkDate,\n"
+                    + "    dr.lrid AS LeaveRequestID,\n"
+                    + "    CASE \n"
+                    + "        WHEN DATENAME(dw, dr.off_date) IN ('Saturday', 'Sunday') THEN 'Weekend'\n"
+                    + "        ELSE 'Working Day'\n"
+                    + "    END AS DayType\n"
+                    + "FROM DateRange dr\n"
+                    + "JOIN [MyAssignment].[dbo].[Employees] e ON dr.owner_eid = e.eid\n"
+                    + "ORDER BY dr.off_date;";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            
+            while (rs.next()) {
+                Employee emp = new Employee();
+                emp.setId(rs.getInt("EmployeeID"));
+                emp.setName(rs.getString("EmployeeName"));
+                emp.setEmail(rs.getString("EmployeeEmail"));
+                
+                Employee manager = new Employee();
+                manager.setId(rs.getInt("ManagerID"));
+                
+                emp.setManager(manager);
+                
+                Department d = new Department();
+                d.setId(rs.getInt("DepartmentID"));
+                
+                Agenda a = new Agenda();
+                a.setEmp(emp);
+                a.setLrid(rs.getInt("LeaveRequestID"));
+                a.setOffWorkDate(rs.getDate("OffWorkDate"));
+                a.setWorkDateType(rs.getString("DayType"));
+                
+                aList.add(a);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (connection != null)
+                try {
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return aList;
+    }
     
     public void updateLeaveRequestState(String state, int lrid) {
         try {
@@ -28,8 +108,10 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
             stm.setInt(2, lrid);
             stm.executeUpdate();
             connection.commit();
+            
         } catch (SQLException ex) {
-            Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LeaveRequestDBContext.class
+                    .getName()).log(Level.SEVERE, null, ex);
             try {
                 connection.rollback();
             } catch (SQLException ex1) {
@@ -38,14 +120,18 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
         } finally {
             try {
                 connection.setAutoCommit(true);
+                
             } catch (SQLException ex) {
-                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LeaveRequestDBContext.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
             if (connection != null)
                 try {
                 connection.close();
+                
             } catch (SQLException ex) {
-                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LeaveRequestDBContext.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -103,14 +189,18 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
             if (rs.next()) {
                 return rs.getInt(1);
             }
+            
         } catch (SQLException ex) {
-            Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LeaveRequestDBContext.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (connection != null)
                 try {
                 connection.close();
+                
             } catch (SQLException ex) {
-                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LeaveRequestDBContext.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
         return -1;
@@ -267,8 +357,10 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                 }
                 return lr;
             }
+            
         } catch (SQLException ex) {
-            Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LeaveRequestDBContext.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -313,8 +405,10 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
                 model.setId(rs.getInt("lrid"));
             }
             connection.commit();
+            
         } catch (SQLException ex) {
-            Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LeaveRequestDBContext.class
+                    .getName()).log(Level.SEVERE, null, ex);
             try {
                 connection.rollback();
             } catch (SQLException ex1) {
@@ -323,14 +417,18 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
         } finally {
             try {
                 connection.setAutoCommit(true);
+                
             } catch (SQLException ex) {
-                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LeaveRequestDBContext.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
             if (connection != null)
                 try {
                 connection.close();
+                
             } catch (SQLException ex) {
-                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LeaveRequestDBContext.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
         
@@ -354,8 +452,10 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
             stm.setInt(5, model.getId());
             stm.executeUpdate();
             connection.commit();
+            
         } catch (SQLException ex) {
-            Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LeaveRequestDBContext.class
+                    .getName()).log(Level.SEVERE, null, ex);
             try {
                 connection.rollback();
             } catch (SQLException ex1) {
@@ -364,14 +464,18 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
         } finally {
             try {
                 connection.setAutoCommit(true);
+                
             } catch (SQLException ex) {
-                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LeaveRequestDBContext.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
             if (connection != null)
                 try {
                 connection.close();
+                
             } catch (SQLException ex) {
-                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LeaveRequestDBContext.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -401,7 +505,8 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
 //        i.add(1);
 //        i.add(3);
 //        System.out.println(dao.getListEidManage(3));
-        dao.updateLeaveRequestState("Approved", 1);
+//        dao.updateLeaveRequestState("Approved", 1);
+        System.out.println(dao.getListAgendaModel());
     }
     
 }

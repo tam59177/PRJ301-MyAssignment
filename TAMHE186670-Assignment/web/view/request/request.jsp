@@ -183,8 +183,9 @@
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <aside class="sidebar">
-                <a href="${pageContext.request.contextPath}/home"><div class="nav-item">📊 Home</div></a>
+                <a href="${pageContext.request.contextPath}/home"><div class="nav-item">🏢 Home</div></a>
                 <div class="nav-item active">📅 Request</div>
+                <a href="${pageContext.request.contextPath}/agenda"><div class="nav-item">📊 Agenda</div></a>
             </aside>
         </aside>
 
