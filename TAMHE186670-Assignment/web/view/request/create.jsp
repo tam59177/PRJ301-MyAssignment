@@ -186,5 +186,24 @@
         </main>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                let fromDate = document.getElementById("from");
+                let toDate = document.getElementById("to");
+
+                function validateDates() {
+                    let fromDateValue = new Date(fromDate.value);
+                    let toDateValue = new Date(toDate.value);
+
+                    if (toDate.value && fromDate.value && toDateValue < fromDateValue) {
+                        alert("From date must be smaller than to date");
+                        toDate.value = ""; // Reset toDate if it's invalid
+                    }
+                }
+
+                fromDate.addEventListener("change", validateDates);
+                toDate.addEventListener("change", validateDates);
+            });
+        </script>
     </body>
 </html>

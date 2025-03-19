@@ -263,7 +263,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="${pageContext.request.contextPath}/leaverequest/create" method="POST">
+                        <form action="${pageContext.request.contextPath}/leaverequest/create" method="POST" onsubmit="return validateForm(event)">
                             <!-- Title -->
                             <div class="mb-3">
                                 <label for="title" class="form-label">Title</label>
@@ -300,54 +300,85 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            pagger('botpagger',${requestScope.pageindex},${requestScope.totalpage}, 2);
+                            pagger('botpagger',${requestScope.pageindex},${requestScope.totalpage}, 2);
 
-            // Show modal automatically if there was an error submitting the form
-            document.addEventListener('DOMContentLoaded', function () {
-                // Handle fadeout and removal of alerts after animation completes
-                const alerts = document.querySelectorAll('.alert.fade-out');
+                            // Show modal automatically if there was an error submitting the form
+                            document.addEventListener('DOMContentLoaded', function () {
+                                // Handle fadeout and removal of alerts after animation completes
+                                const alerts = document.querySelectorAll('.alert.fade-out');
 
-                alerts.forEach(alert => {
-                    setTimeout(() => {
-                        alert.style.display = 'none';
-                    }, 2000); // Remove from DOM after 2 seconds
-                });
-            });
+                                alerts.forEach(alert => {
+                                    setTimeout(() => {
+                                        alert.style.display = 'none';
+                                    }, 2000); // Remove from DOM after 2 seconds
+                                });
+                            });
 
-            function pagger(id, pageindex, totalpage, gap)
-            {
-                var container = document.getElementById(id);
-                var content = '';
+                            function validateForm(event) {
+                                let fromDateValue = document.getElementById("from").value;
+                                let toDateValue = document.getElementById("to").value;
 
-                if (pageindex > gap + 1)
-                    content += '<a href="${pageContext.request.contextPath}/leaverequest?page=1">First</a>';
+                                let today = new Date();
+                                today.setHours(0, 0, 0, 0); // Remove time portion for accurate comparison
 
-                if (pageindex - gap > 2)
-                    content += '<span>...</span>';
+                                if (fromDateValue) {
+                                    let fromDateObj = new Date(fromDateValue);
 
-                for (var i = pageindex - gap; i < pageindex; i++)
-                {
-                    if (i > 0)
-                        content += '<a href="${pageContext.request.contextPath}/leaverequest?page=' + i + '">' + i + '</a>';
-                }
+                                    // Check if "From Date" is greater than today
+                                    if (fromDateObj <= today) {
+                                        alert("Error: 'From Date' must be greater than today.");
+                                        event.preventDefault();
+                                        return false;
+                                    }
 
-                content += '<span class=\"span-pagger\">' + pageindex + '</span>';
+                                    // Check if "To Date" is greater than "From Date"
+                                    if (toDateValue) {
+                                        let toDateObj = new Date(toDateValue);
+                                        if (toDateObj < fromDateObj) {
+                                            alert("Error: 'To Date' must be greater than 'From Date'.");
+                                            event.preventDefault();
+                                            return false;
+                                        }
+                                    }
+                                }
 
-                for (var i = pageindex + 1; i <= pageindex + gap; i++)
-                {
-                    if (i <= totalpage)
-                        content += '<a href="${pageContext.request.contextPath}/leaverequest?page=' + i + '">' + i + '</a>';
-                }
+                                return true;
+                            }
 
-                if (pageindex + gap <= totalpage - 2)
-                    content += '<span>...</span>';
+                            function pagger(id, pageindex, totalpage, gap)
+                            {
+                                var container = document.getElementById(id);
+                                var content = '';
 
-                if (pageindex < totalpage - gap)
-                    content += '<a href="${pageContext.request.contextPath}/leaverequest?page=' + totalpage + '">Last</a>';
+                                if (pageindex > gap + 1)
+                                    content += '<a href="${pageContext.request.contextPath}/leaverequest?page=1">First</a>';
 
-                container.innerHTML = content;
+                                if (pageindex - gap > 2)
+                                    content += '<span>...</span>';
 
-            }
+                                for (var i = pageindex - gap; i < pageindex; i++)
+                                {
+                                    if (i > 0)
+                                        content += '<a href="${pageContext.request.contextPath}/leaverequest?page=' + i + '">' + i + '</a>';
+                                }
+
+                                content += '<span class=\"span-pagger\">' + pageindex + '</span>';
+
+                                for (var i = pageindex + 1; i <= pageindex + gap; i++)
+                                {
+                                    if (i <= totalpage)
+                                        content += '<a href="${pageContext.request.contextPath}/leaverequest?page=' + i + '">' + i + '</a>';
+                                }
+
+                                if (pageindex + gap <= totalpage - 2)
+                                    content += '<span>...</span>';
+
+                                if (pageindex < totalpage - gap)
+                                    content += '<a href="${pageContext.request.contextPath}/leaverequest?page=' + totalpage + '">Last</a>';
+
+                                container.innerHTML = content;
+
+                            }
         </script>
     </body>
 </html>
