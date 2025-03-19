@@ -215,9 +215,12 @@
                     </thead>
                     <tbody>
                         <c:forEach items="${eList}" var="e">
+
                             <tr>
                                 <td>${e.name}</td>
                                 <c:forEach items="${dateList}" var="date">
+
+                                    <!-- Xu li logic -->
                                     <c:set var="isOff" value="false"/>
                                     <c:forEach items="${agenda}" var="a">
                                         <c:if test="${a.emp.id == e.id && date.equals(a.offWorkDate.toLocalDate())}">
@@ -234,7 +237,9 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </c:forEach>
+
                             </tr>
+
                         </c:forEach>
                     </tbody>
                 </table>

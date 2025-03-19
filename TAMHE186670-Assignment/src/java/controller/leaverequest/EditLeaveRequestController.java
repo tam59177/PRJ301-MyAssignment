@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
-import model.Employee;
 import model.LeaveRequest;
 import model.User;
 
@@ -39,7 +38,7 @@ public class EditLeaveRequestController extends BaseRecordAccessControlByOwnerCo
         LeaveRequestDBContext db;
 
         switch (type) {
-            case "all":
+            case "all" -> {
                 model.setTitle(req.getParameter("title"));
                 model.setReason(req.getParameter("reason"));
                 model.setFrom(Date.valueOf(req.getParameter("from")));
@@ -50,17 +49,16 @@ public class EditLeaveRequestController extends BaseRecordAccessControlByOwnerCo
 
                 req.setAttribute("message", "Update Leave Request Success!");
                 req.getRequestDispatcher("/leaverequest").forward(req, resp);
-                break;
-            case "state":
+            }
+            case "state" -> {
                 String state = req.getParameter("state");
 
                 db = new LeaveRequestDBContext();
-                db.updateLeaveRequestState(state, model.getId());
+                db.updateLeaveRequestState(state, model.getId(), user.getUsername());
 
                 req.setAttribute("message", state + " Leave Request Success!");
                 req.getRequestDispatcher("/leaverequest").forward(req, resp);
-                break;
+            }
         }
     }
-
 }

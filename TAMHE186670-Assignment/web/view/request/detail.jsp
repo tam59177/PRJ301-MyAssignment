@@ -44,9 +44,9 @@
                 <div class="btn btn-primary">
                     <a href="#" class="text-light" data-bs-toggle="modal" data-bs-target="#updateRequestModal">Edit Leave Request</a>
                 </div>
-                <div class="btn btn-danger">
+<!--                <div class="btn btn-danger">
                     <a href="${pageContext.request.contextPath}/leaverequest/delete" class="text-light">Delete Leave Request</a>
-                </div>
+                </div>-->
             </div>
 
             <div class="request-detail-container d-flex justify-content-center">

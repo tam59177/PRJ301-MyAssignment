@@ -26,7 +26,7 @@ public class DetailLeaveRequestController extends BaseRequiredAuthenticationCont
         LeaveRequestDBContext db = new LeaveRequestDBContext();
         int lrid = Integer.parseInt(req.getParameter("lrid"));
         LeaveRequest lr = db.get(lrid);
-
+ 
         boolean isValidView = false;
         boolean canManage = false;
 
