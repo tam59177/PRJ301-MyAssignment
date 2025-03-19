@@ -42,8 +42,8 @@ public class LeaveRequestController extends BaseRequiredAuthenticationController
         db = new LeaveRequestDBContext();
         ArrayList<LeaveRequest> lrList = db.list(pageindex, pagesize, eidList);
         db = new LeaveRequestDBContext();
-        int count = db.list(pageindex, pagesize, eidList).size();
-        int totalpage = (count % pagesize == 0) ? (count / pagesize) : (count / pagesize) + 1;
+        int count = db.list(1, Integer.MAX_VALUE, eidList).size();
+        int totalpage = (int) Math.ceil((double) count / pagesize);
 
         if (message != null) {
             req.setAttribute("message", message);

@@ -501,12 +501,14 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
 //        dao.insert(model);
 
 //        System.out.println(dao.list(1, 1));
-//        List<Integer> i = new ArrayList<>();
-//        i.add(1);
-//        i.add(3);
+        List<Integer> i = new ArrayList<>();
+        i.add(1);
+        i.add(2);
+        i.add(3);
+        i.add(4);
 //        System.out.println(dao.getListEidManage(3));
 //        dao.updateLeaveRequestState("Approved", 1);
-        System.out.println(dao.getListAgendaModel());
+        System.out.println(dao.list(1, 10, i));
     }
     
 }
